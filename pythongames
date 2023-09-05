@@ -1,0 +1,441 @@
+# By submitting this assignment, I agree to the following:
+#   "Aggies do not lie, cheat, or steal, or tolerate those who do."
+#   "I have not given or received any unauthorized aid on this assignment."
+#
+# Names:        Anil Parthasarathi
+#               Lawson Canter
+# Section:      571
+# Assignment:   Game Project
+# Date:         3 December 2021
+#
+
+#Tic Tac Toe
+import random
+
+#function for printing the game board
+def print_game(board):
+  '''function takes in a board and prints it out in the correct format'''
+  print("{} | {} | {}".format(board[0][0],board[0][1],board[0][2]))
+  print("----------")
+  print("{} | {} | {}".format(board[1][0],board[1][1],board[1][2]))
+  print("----------")
+  print("{} | {} | {}".format(board[2][0],board[2][1],board[2][2]))
+
+#use randint to choose a random space for the computer to place their mark
+def computer_choice(board):
+  '''function takes in a board and comes up with a valid random movement for the computer'''
+  turn = True 
+  #keep looking for spaces until a valid one is found
+  while turn == True:
+    
+    i = random.randint(0,2)
+    j = random.randint(0,2)
+
+    if board[i][j] == " ":
+        board[i][j] = "o"
+        turn = False
+#function to see if a winner has been found
+def check_board(board):
+  '''function takes in a board and returns whether or not a winner has been found and prints who won'''
+  #check Rows
+  for row in board:
+    if row[0] == "x"  and row[1] == "x" and row[2] == "x":
+      print("You won!")
+      return False
+
+    elif row[0] == "o"  and row[1] == "o" and row[2] == "o":
+      print("You lost!")
+      return False
+
+  #check Columns
+  for j in range(0,3):
+    if board[0][j] == "x" and board[1][j] == 'x' and board[2][j] == 'x':
+      print("You Won!")
+      return False
+    
+    elif board[0][j] == "o" and board[1][j] == 'o' and board[2][j] == 'o':
+      print("You lost!")
+      return False
+
+  #Check Diagonols
+  if board[0][0] == "x" and board[1][1] == 'x' and board[2][2] == 'x':
+    print("You Won!")
+    return False
+
+  elif board[0][2] == "x" and board[1][1] == 'x' and board[2][0] == 'x':
+    print("You Won!")
+    return False
+
+  draw = True
+  for b in board:
+      if " " in b:
+          draw = False
+
+  if draw == True:
+      print("A draw! Too bad.")
+      return False
+  
+  return True
+  
+#main tic tac toe function
+def ticTacToe():
+  '''this function will start the tic tac toe game'''
+  print()
+  print("Hello, let's play tic-tac-toe")
+  print()
+  print("The way the game works is that you must get 3 spaces in a row to win. Each turn you and the computer will each choose one space using a coordinate in the form \'x y\'. The x and y will work like a python list is expected to function. x designates the row starting with 0 and y designates the column starting with 0. The coordinates inputted MUST be integers from 0-2.")
+  print()
+  print("Example:\n\nInput: 0 0\n\nResult: An 'x' will appear on the top left space on the grid. Then the computer will take its turn and a graph will appear with the computers move represented.\n")
+  
+  game = True
+  board = [[" "," "," "],[" "," "," "],[" "," "," "]]
+  print_game(board)
+  turns = 0
+
+  while game == True:
+
+    done = False
+    while done == False:
+         print("[3] Exit")
+         choice = input("select a position [row column]: ")
+
+         position = choice.split()
+         try:
+             if int(choice) == 3:
+                 done = True
+                 return
+         except:
+            wl = 1.048596
+         try:
+             i = int(position[0])
+             j = int(position[1])
+         except:
+             print("\nThat was not valid input :( :( :( (you made us sad)")
+             print()
+             print("Please try again! \n")
+             continue
+         
+         if i > 2 or j > 2 or i < 0 or j < 0:
+             print("\nThat was not valid input :( :( :( (you made us sad)")
+             print()
+             print("Please try again! \n")
+             continue
+    
+         if board[i][j] == " ":
+             board[i][j] = "x"
+             done = True
+    
+         else:
+             print("\nThat spot is taken. Please try again. \n")
+
+
+    print_game(board)
+    game = check_board(board)
+    if game == False:
+        break
+
+    if turns == 4:
+      break
+
+    print("Computer's turn.")
+    computer_choice(board)
+    print_game(board)
+    game = check_board(board)
+
+    turns += 1
+
+    if game == False:
+      restart = bool(input("Restart? (True/False) "))
+
+      if restart == True:
+        board = [[" "," "," "],[" "," "," "],[" "," "," "]]
+        print_game(board)
+        game = True
+        turns = 0
+
+      else:
+        print("good bye")
+
+#mazeWalker
+#import colorama to be able to use special colors
+from colorama import Fore, Style
+
+def mazeWalker():
+    '''this function will start the mazeWalker game'''
+    #function for printing maze
+    def printMaze(maze):
+        '''function takes in a maze and prints it out'''
+        for l in maze:
+            for s in l:
+                print(s, end = "")
+            print()
+    #function for moving on the board
+    #will check the input and see if it is possible
+    #if it is valid then true will be returned along with what should be the new position
+    #if not then false is returned
+    def movement(maze, move, cur):
+        '''function takes in the maze, a movement, and the current location. Checks to see if proposed movement is valid. If so it will return true as well as what should be the new location.
+        if not then it will print a statement saying it is an invalid move and return false'''
+        if (move == "left"):
+            if(cur[1] - 1 >= 0):
+                if (maze[cur[0]][cur[1] - 1] == " "):
+                    maze[cur[0]][cur[1] - 1] = maze[cur[0]][cur[1]]
+                    maze[cur[0]][cur[1]] = " "
+                    cur = [cur[0], cur[1] - 1]
+                    return(True, cur)
+                else:
+                    print("That is an invalid move, try again!")
+                    return(False, 0)
+            else:
+                print("That is an invalid move, try again!")
+                return(False, 0)
+        elif (move == "right"):
+            if(cur[1] + 1 < len(maze[0])):
+                if (maze[cur[0]][cur[1] + 1] == " "):
+                    maze[cur[0]][cur[1] + 1] = maze[cur[0]][cur[1]]
+                    maze[cur[0]][cur[1]] = " "
+                    cur = [cur[0], cur[1] + 1]
+                    return(True, cur)
+                else:
+                    print("That is an invalid move, try again!")
+                    return(False, 0)
+            else:
+                print("That is an invalid move, try again!")
+                return(False, 0)
+        elif (move == "up"):
+            if(cur[0] - 1 >= 0):
+                if (maze[cur[0] - 1][cur[1]] == " "):
+                    maze[cur[0] - 1][cur[1]] = maze[cur[0]][cur[1]]
+                    maze[cur[0]][cur[1]] = " "
+                    cur = [cur[0] - 1, cur[1]]
+                    return(True, cur)
+                else:
+                    print("That is an invalid move, try again!")
+                    return(False, 0)
+            else:
+                print("That is an invalid move, try again!")
+                return(False, 0)
+        elif (move == "down"):
+            if(cur[0] + 1 < len(maze)):
+                if (maze[cur[0] + 1][cur[1]] == " "):
+                    maze[cur[0] + 1][cur[1]] = maze[cur[0]][cur[1]]
+                    maze[cur[0]][cur[1]] = " "
+                    cur = [cur[0] + 1, cur[1]]
+                    return(True, cur)
+                else:
+                    print("That is an invalid move, try again!")
+                    return(False, 0)
+            else:
+                print("That is an invalid move, try again!")
+                return(False, 0)
+        else:
+             print("That is an invalid move, try again!")
+             return(False, 0)
+    #the maze the player will have to navigate through, represented by a list of lists             
+    maze = [[" ", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
+            [" ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X"],
+            [" ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", "X", "X", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X"],
+            [" ", "X", " ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X"],
+            [" ", "X", " ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X", "X", "X", "X", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X"],
+            [" ", "X", " ", " ", " ", "X", " ", "X", "X", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", "X", " ", " ", " ", " ", " ", "X", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", "X"],
+            [" ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", " ", "X", "X", "X", "X", "X", " ", "X", " ", "X"],
+            [" ", "X", "X", "X", "X", "X", "X", "X", " ", "X", "X", "X", "X", "X", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X"],
+            [" ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", "X", "X", " ", "X", "X", "X", " ", "X", "X", "X", "X", "X", "X", "X"],
+            [" ", "X", " ", "X", "X", "X", "X", "X", " ", "X", "X", "X", " ", "X", " ", "X", " ", "X", "X", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X"],
+            [" ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", " ", "X", " ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", "X", "X", " ", " ", " ", " ", " ", "X"],
+            [" ", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", " ", " ", " ", "X", "X", "X", "X", "X", " ", Fore.GREEN + Style.BRIGHT + "o" + Fore.RESET + Style.NORMAL],
+            [" ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X"],
+            [" ", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", "X", "X", "X", "X", " ", "X", "X", "X", "X", "X", " ", "X", " ", "X", "X", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X"],
+            [" ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X"],
+            [" ", "X", "X", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X", "X", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X"],
+            [" ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X"],
+            [" ", "X", " ", "X", " ", "X", " ", "X", "X", "X", "X", "X", " ", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X", " ", "X", "X", "X", "X", "X", " ", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X"],
+            [" ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", "X", " ", "X", " ", "X"],
+            [" ", "X", "X", "X", "X", "X", " ", "X", " ", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X"],
+            [" ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X"],
+            [" ", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", " ", "X", "X", "X", "X", "X", " ", "X", "X", "X", " ", "X", " ", "X", " ", "X", "X", "X", " ", "X"],
+            [" ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X"],
+            [" ", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X", "X", "X", "X", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X", "X", "X"],
+            [" ", "X", " ", " ", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", "X", " ", "X"],
+            [" ", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X", "X", "X", " ", "X", " ", "X", " ", "X", "X", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X", "X", "X", "X", "X", " ", "X", " ", "X"],
+            [" ", "X", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X"],
+            [" ", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X", "X", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X"],
+            [" ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", "X", " ", "X", " ", "X", " ", " ", " ", "X", " ", "X", " ", "X", " ", " ", " ", "X"],
+            [" ", "X", "X", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", " ", "X", "X", "X", " ", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X", " ", "X"],
+            [" ", "X", " ", " ", " ", "X", " ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", " ", "X"],
+            [" ", "X", " ", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", "X", "X", "X", "X", " ", "X", " ", "X", "X", "X"],
+            [" ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X"],
+            [" ", "X", "X", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", "X", "X", " ", "X"],
+            [" ", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "X", " ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X"],
+            [" ", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X"],
+            [" ", "X", " ", " ", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", "X", " ", "X"],
+            [" ", "X", "X", "X", "X", "X", " ", "X", "X", "X", " ", "X", "X", "X", " ", "X", "X", "X", " ", "X", " ", "X", " ", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X"],
+            [" ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", "X"],
+            [" ", "X", " ", "X", "X", "X", "X", "X", " ", "X", "X", "X", " ", "X", "X", "X", " ", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", " ", "X", " ", "X", "X", "X", "X", "X", "X", "X", " ", "X"],
+            [" ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", "X", " ", " ", " ", " ", " ", " ", " ", " ", " ", "X"],
+            [" ", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X", "X"]]
+    #print out instructions
+    print("\nIt's time to set out on your journey, welcome to Maze Walker!\n\nYou are represented in the maze as a green circle. The object of the game is to get to the end of the maze on the other side (the empty space leading out of the board).Any space represented by an 'X' is a wall that cannot be moved through. You must navigate through the empty spaces in order to make it out. You also may not leave the maze through the entrance you came in from (you're not a cheater, right :)?) Furthermore, only the certain keywords specified below will work for movement. If anything else is used you will be asked to re-input your move.\n\nKeywords: up, down, left, right. These will be used to move across the board.\n\n Example:\n\nInput: left\n\nResult: The green circle will move one space to the left.\n")
+    print("Hint: The way the maze is output may make seeing the empty spaces a little difficult. I recommend highlighting with your cursor to check whether or not a space is empty if you are ever unsure. \n")
+    #set starting location
+    cur = [11, 41]
+    walk = True
+    #while walk is true the user will repeatedly be asked where they would like to move
+    #if the current location is found to be the end position then walk will be set to false and game will end
+    #at any point the player can press q to quit
+    while(walk):
+        #print the maze each turn
+        printMaze(maze)
+        print("Press 'q' to quit\n")
+        #take in movement input
+        move = input("How would you like to move? ")
+        #if input equals q then go back to menu
+        if (move == "q"):
+            break
+        val = False
+        #keep trying until valid input is recieved
+        while(val == False):
+            tup = movement(maze, move, cur)
+            val = tup[0]
+            if (val == True):
+                cur = tup[1]
+                #check if the final location is reached
+                if (cur == [28, 1]):
+                    walk = False
+                    print()
+                    print("Hoorary! You have escaped the maze.")
+                    print()
+                    print("Congratulations for beating the game!")
+                    choice = input("Would you lke to go back to the menu (y/n)? ")
+                    if choice == "y":
+                        break
+            else:
+                move = input("How would you like to move? ")
+                if (move == "q"):
+                    return
+          
+#rock paper scissors 
+def rockPaperScissor():
+  '''function will start the rock paper scissors game'''
+  #print out instructions
+  print("\nHello, let's play rock paper scissors!")
+  print()
+  print("The objective of the game is to pick the item that beats your opponent's item. Rock will beat scissors, scissors will beat paper, and paper will beat rock. Each choice will be represented by a number. 1 for rock, 2 for paper, 3 for scissors.You will have to hope you chose the one that triumphs over the opponent!")
+  print()
+  print("Example:\n\nInput: 1\n\nResult: Your choice will be registered as rock. Then the computer's choice is printed and the match winner is printed. Then a new round will start and you will be able to choose again.")
+  print()
+  print("The game will keep continuing until you enter '4'.")
+  
+  game = True
+  
+  #keep going while game = true
+  while game == True:
+    print()
+    user = int(input("[1] Rock\n[2] Paper\n[3] Scissor\n[4] Quit\n"))
+    print()
+    computer = random.randint(1,3)
+
+    if user == 1:
+
+      if computer == 1:
+        print("Computer picked rock \n")
+        print('it\'s a draw loser!')
+
+      elif computer == 2:
+        print("Computer picked paper \n")
+        print('You lost nerd!')
+      
+      elif computer == 3:
+        print("Computer picked scissors \n")
+        print('You Won! :)')
+
+    #paper
+    elif user == 2:
+
+      #rock
+      if computer == 1:
+        print("Computer picked rock \n")
+        print('You won! :)')
+
+      #Paper
+      elif computer == 2:
+        print("Computer picked paper \n")
+        print('It\'s a draw!')
+      
+      #Scissor
+      elif computer == 3:
+        print("Computer picked scissors \n")
+        print('You lost!')
+
+    #scissors
+    elif user == 3:
+      #print('scissor')
+
+      #rock
+      if computer == 1:
+        print("Computer picked rock \n")
+        print('You lost!')
+
+      #Paper
+      elif computer == 2:
+        print("Computer picked paper \n")
+        print('You won!')
+      
+      #Scissor
+      elif computer == 3:
+        print("Computer picked scissors \n")
+        print('It\'s a draw!')
+
+    elif user == 4:
+      print('good bye!')
+      game = False
+
+#menu
+
+def menu():
+    '''function will call up the menu'''
+    #PRINT OUT THE GREETING
+    print("Greetings! Welcome to our gaming program. This is the menu where you will be able to choose between 3 games to play.")
+    print()
+    print("Please input the number corresponding to the game you want to start.")
+    #set menu equal to true
+    menu = True
+    #while loop to show the menu until menu equals false
+    while menu == True:
+      #print out the game descriptions
+      print()
+      print("[1] Tic-Tac-Toe — A thrilling game where you must enter grid coordinates to mark your claims on a 3x3 grid. You will compete against the computer to see who can get 3 spaces in a row first. \n")
+      print("[2] Maze Walker — You have been trapped in a terrifying maze! But all hope is not lost, you must use your expert skills to navigate your way through the maze and reach the other side (to freedom). Using the keywords up, down, left, and right set off on a fantastic journey! \n")
+      print("[3] Rock Paper Scissors — For millenia humanity has engaged in a neverending battle, now you are at the forefront. Armed with 3 weapons (rock, paper, and scissors) you must choose wisely which one to use and crush your opponent (The computer)! With rock obliterating scissors, scissors wrecking paper, and paper annihilating rock you have a treacherous war ahead of you! \n")
+      print("[4] Exit — An option for losers.")
+      print()
+      #use a try else to make sure we get valid input
+      #we will call a specific game function depending on what the choice is
+      #if choice is 4 then the program will stop
+      #if something is input that isnt one of the 4 choices a message will be displayed and the user
+      #will be asked to restart the program
+      try:
+          choice = int(input("Your choice: "))
+          
+          if (choice == 1):
+            ticTacToe() 
+    
+          elif (choice == 2):
+            mazeWalker()
+    
+          elif (choice == 3):
+            rockPaperScissor()
+    
+          elif choice == 4:
+            menu = False
+          
+          else:
+            raise
+            
+      except:
+         print("\nI'm sorry that was not a valid input.\n")
+         menu = False
+         print("Please reload the program and try again with a correct form of input.")
+
+#call the menu function and begin the program
+menu()
